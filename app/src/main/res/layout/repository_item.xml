@@ -23,7 +23,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/iv_favorite"
+                android:id="@+id/iv_share"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_margin="16dp"
@@ -36,7 +36,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_preco"
+                android:id="@+id/tv_repository_name"
                 style="@style/TextAppearance.AppCompat.Body2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -45,6 +45,40 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Nome do repositorio" />
+
+            <TextView
+                android:id="@+id/tv_language"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_repository_name"
+                tools:text="Language" />
+
+            <TextView
+                android:id="@+id/tv_watchers"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_language"
+                tools:text="Watching" />
+
+            <TextView
+                android:id="@+id/tv_stars"
+                style="@style/TextAppearance.AppCompat.Body1"
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_watchers"
+                tools:text="Stars" />
+
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
