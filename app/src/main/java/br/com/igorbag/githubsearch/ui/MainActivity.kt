@@ -11,8 +11,12 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import br.com.igorbag.githubsearch.R
 import br.com.igorbag.githubsearch.data.GitHubService
@@ -30,6 +34,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var btnConfirmar: Button
     lateinit var listaRepositories: RecyclerView
     lateinit var githubApi: GitHubService
+    lateinit var progress: ProgressBar
+    lateinit var noInternetImage: ImageView
+    lateinit var noInternetText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,10 +45,23 @@ class MainActivity : AppCompatActivity() {
         showUserName()
         setupListeners()
         setupRetrofit()
-        if(checkForInternet(applicationContext)){
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (checkForInternet(applicationContext)) {
             getAllReposByUserName()
+        } else {
+            emptyState()
         }
-//        getAllReposByUserName()
+    }
+
+    fun emptyState() {
+        progress.isVisible = false
+        listaRepositories.isVisible = false
+        noInternetText.isVisible = true
+        noInternetImage.isVisible = true
     }
 
     // Metodo responsavel por realizar o setup da view e recuperar os Ids do layout
@@ -49,6 +69,9 @@ class MainActivity : AppCompatActivity() {
         nomeUsuario = findViewById(R.id.et_nome_usuario)
         btnConfirmar = findViewById(R.id.btn_confirmar)
         listaRepositories = findViewById(R.id.rv_lista_repositories)
+        progress = findViewById(R.id.pb_list_repositories)
+        noInternetImage = findViewById(R.id.iv_no_wifi)
+        noInternetText = findViewById(R.id.tv_no_internet)
     }
 
     //metodo responsavel por configurar os listeners click da tela
@@ -100,6 +123,9 @@ class MainActivity : AppCompatActivity() {
                 response: Response<List<Repository>>
             ) {
                 if (response.isSuccessful) {
+                    progress.isVisible = false
+                    noInternetText.isVisible = false
+                    noInternetImage.isVisible = false
                     response.body()?.let {
                         setupAdapter(it)
                     }
@@ -126,7 +152,13 @@ class MainActivity : AppCompatActivity() {
             adapter = repositoryAdapter
         }
 
-//        repositoryAdapter
+        repositoryAdapter.carItemLister = { repository ->
+            openBrowser(repository.htmlUrl)
+        }
+
+        repositoryAdapter.btnShareLister = { repository ->
+            shareRepositoryLink(repository.htmlUrl)
+        }
     }
 
     fun checkForInternet(context: Context): Boolean {
@@ -142,9 +174,9 @@ class MainActivity : AppCompatActivity() {
                 activeNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
                 else -> false
             }
-        }else{
+        } else {
             @Suppress("DEPRECATION")
-            val networkInfo = connectivityManager.activeNetworkInfo?: return false
+            val networkInfo = connectivityManager.activeNetworkInfo ?: return false
             @Suppress("DEPRECATION")
             return networkInfo.isConnected
         }

@@ -30,14 +30,14 @@ class RepositoryAdapter(private val repositories: List<Repository>) :
         holder.stars.text = repositories[position].stargazersCount.toString()
 
         // Exemplo de click no item
-        //holder.itemView.setOnClickListener {
-        // carItemLister(repositores[position])
-        //}
+        holder.itemView.setOnClickListener {
+         carItemLister(repositories[position])
+        }
 
-        // Exemplo de click no btn Share
-        //holder.favorito.setOnClickListener {
-        //    btnShareLister(repositores[position])
-        //}
+//         Exemplo de click no btn Share
+        holder.btnCompartilhar.setOnClickListener {
+            btnShareLister(repositories[position])
+        }
     }
 
     // Pega a quantidade de repositorios da lista
